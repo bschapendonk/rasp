@@ -1,6 +1,6 @@
 # export BUILDKIT_PROGRESS=plain
 # docker build -t probe . && docker run --rm -it probe
-FROM alpine AS builder
+FROM --platform=$BUILDPLATFORM alpine AS builder
 
 RUN <<EOF
 adduser -D -H rasp rasp
