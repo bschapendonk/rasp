@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: rasp
+
+resources:
+  - namespace.yaml
+  - deployment.yaml
+
+# ssh-keygen -f probe_key -C atlas-probe
+secretGenerator:
+  - name: rasp
+    files:
+      - probe_key
+      - probe_key.pub

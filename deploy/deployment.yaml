@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rasp
+  labels:
+    app: rasp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rasp
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: rasp
+    spec:
+      # hostNetwork: true
+      securityContext:
+        fsGroup: 1000
+      enableServiceLinks: false
+      initContainers:
+        - name: rasp-init
+          image: ghcr.io/bschapendonk/rasp:main
+          resources: {}
+          command:
+            - sh
+            - -c
+            - cp -vL /tmp/key/* /tmp/etc; echo "prod" > /tmp/etc/mode; echo "RXTXRPT=yes" > /tmp/etc/config.txt; chmod 600 /tmp/etc/*;
+          volumeMounts:
+            - name: data
+              mountPath: /tmp/etc
+            - name: probe-key
+              mountPath: /tmp/key
+      containers:
+        - name: rasp-probe
+          image: ghcr.io/bschapendonk/rasp:main
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+          resources: {}
+          volumeMounts:
+            - name: data
+              mountPath: /rasp/etc/ripe-atlas
+      volumes:
+        - name: probe-key
+          secret:
+            secretName: rasp
+        - name: data
+          emptyDir: {}

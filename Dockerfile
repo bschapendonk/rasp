@@ -44,7 +44,6 @@ RUN <<EOF
 adduser -D -H rasp rasp
 
 apk add --upgrade --no-cache \
-    libcap \
     net-tools \
     openssh-client
 EOF
