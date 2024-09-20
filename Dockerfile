@@ -36,17 +36,6 @@ touch /probe/etc/ripe-atlas/mode
 make install
 EOF
 
-COPY --chown=probe:probe --chmod=0755 <<EOF /probe/start
-#!/bin/sh
-if [ -f etc/ripe-atlas/probe_key ]; then
-    chmod 0600 etc/ripe-atlas/probe_key
-fi
-if [ -f etc/ripe-atlas/probe_key.pub ]; then
-    chmod 0644 etc/ripe-atlas/probe_key.pub
-fi
-sbin/ripe-atlas
-EOF
-
 FROM alpine
 
 RUN <<EOF
@@ -62,4 +51,4 @@ COPY --from=builder --chown=probe:probe /probe /probe
 
 WORKDIR /probe
 USER probe
-CMD ["/probe/start"]
+CMD ["/probe/sbin/ripe-atlas"]
