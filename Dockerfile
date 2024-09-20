@@ -38,7 +38,7 @@ make install
 echo "RXTXRPT=yes" > /rasp/etc/ripe-atlas/config.txt
 EOF
 
-FROM alpine
+FROM --platform=$BUILDPLATFORM alpine
 
 RUN <<EOF
 adduser -D -H rasp rasp
