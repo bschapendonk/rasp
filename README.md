@@ -1,16 +1,16 @@
 # rasp "ripe-atlas-software-probe"
 
-Inspired by https://github.com/CTassisF/ripe-atlas-alpine, which was lacking some thigs for me
+Inspired by https://github.com/CTassisF/ripe-atlas-alpine.
 
-* rootless
-* daily updates for the base image
+Most notable changes:
+* Focus on kubernetes / kustomize
+* Rootless container
+* Daily builds using GitHub Actions
 
-## How to deploy
-
-### Kubernetes, using Kustomize
+## How to deploy on kubernetes using kustomize
 
 There is an example deployment in the `deploy/` folder
 
-* Create a ssh key using `ssh-keygen -f probe_key -C atlas-probe`, this will be used by the kustomization to create a secret.
+* Create a ssh key using `ssh-keygen -f probe_key -C atlas-probe`, the `secretGenerator` in `kustomization.yaml` will create a secret based on these files.
 * Then run `kubectl apply -k .`, this wil apply `kustomization.yaml` in the namespace `rasp`.
-* Register your probe using the public key
+* Register your probe using the public key.
