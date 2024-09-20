@@ -27,7 +27,7 @@ spec:
           command:
             - sh
             - -c
-            - cp -vL /tmp/key/* /tmp/etc; echo "prod" > /tmp/etc/mode; echo "RXTXRPT=yes" > /tmp/etc/config.txt; chmod 600 /tmp/etc/*;
+            - cp -vL /tmp/key/* /tmp/etc && cp -vL /rasp/etc/ripe-atlas/* /tmp/etc && chmod 600 /tmp/etc/*
           volumeMounts:
             - name: data
               mountPath: /tmp/etc
