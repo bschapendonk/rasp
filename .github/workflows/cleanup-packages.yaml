@@ -19,5 +19,5 @@ jobs:
         with:
           package-name: rasp
           package-type: container
-          token: ${{ secrets.GITHUB_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           min-versions-to-keep: 3
