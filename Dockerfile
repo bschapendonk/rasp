@@ -3,7 +3,7 @@
 FROM alpine AS builder
 
 RUN <<EOF
-adduser -D -H probe probe
+adduser -D -H rasp rasp
 
 apk add --upgrade --no-cache \
     autoconf \
@@ -17,29 +17,31 @@ apk add --upgrade --no-cache \
     make \
     openssl-dev
 
-git clone --recursive https://github.com/RIPE-NCC/ripe-atlas-software-probe.git /tmp/probe
+git clone --recursive https://github.com/RIPE-NCC/ripe-atlas-software-probe.git /tmp/rasp
 
-cd /tmp/probe
+cd /tmp/rasp
 
 autoreconf -iv
 
 ./configure \
-    --prefix=/probe \
-    --with-user=probe \
-    --with-group=probe \
+    --prefix=/rasp \
+    --with-user=rasp \
+    --with-group=rasp \
     --disable-systemd
 
 # FIX: make tries to chown this file, but it doesnt exist yet
-mkdir -p /probe/etc/ripe-atlas
-touch /probe/etc/ripe-atlas/mode
+mkdir -p /rasp/etc/ripe-atlas
+touch /rasp/etc/ripe-atlas/mode
 
 make install
+
+echo "RXTXRPT=yes" > /rasp/etc/ripe-atlas/config.txt
 EOF
 
 FROM alpine
 
 RUN <<EOF
-adduser -D -H probe probe
+adduser -D -H rasp rasp
 
 apk add --upgrade --no-cache \
     libcap \
@@ -47,8 +49,7 @@ apk add --upgrade --no-cache \
     openssh-client
 EOF
 
-COPY --from=builder --chown=probe:probe /probe /probe
+COPY --from=builder --chown=rasp:rasp /rasp /rasp
 
-WORKDIR /probe
-USER probe
-CMD ["/probe/sbin/ripe-atlas"]
+USER rasp
+CMD ["/rasp/sbin/ripe-atlas"]
