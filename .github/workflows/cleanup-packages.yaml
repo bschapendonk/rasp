@@ -1,0 +1,22 @@
+name: Cleanup Packages
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 39 23 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/delete-package-versions@v5
+        with:
+          package-name: rasp
+          package-type: container
+          token: ${{ secrets.GITHUB_PAT }}
+          min-versions-to-keep: 3
