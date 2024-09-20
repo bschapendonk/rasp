@@ -8,12 +8,6 @@ name: Docker
 on:
   schedule:
     - cron: 39 22 * * *
-  push:
-    branches:
-      - main
-    # Publish semver tags as releases.
-    tags:
-      - v*.*.*"
   pull_request:
     branches:
       - main
@@ -27,6 +21,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
     permissions:
       contents: read
       packages: write
@@ -45,6 +44,9 @@ jobs:
         uses: sigstore/cosign-installer@v3
         with:
           cosign-release: v2.4.0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -77,6 +79,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          platforms: ${{ matrix.platform }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -5,9 +5,9 @@ Inspired by https://github.com/CTassisF/ripe-atlas-alpine, which was lacking som
 * rootless
 * daily updates for the base image
 
-# How to deploy
+## How to deploy
 
-## Kubernetes, using Kustomize
+### Kubernetes, using Kustomize
 
 There is an example deployment in the `deploy/` folder
 
