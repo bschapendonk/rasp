@@ -1,4 +1,6 @@
-# rasp ["ripe-atlas-software-probe"](https://github.com/RIPE-NCC/ripe-atlas-software-probe)
+# rasp
+
+Container "Docker" image for the ["ripe-atlas-software-probe"](https://github.com/RIPE-NCC/ripe-atlas-software-probe)
 
 Inspired by https://github.com/CTassisF/ripe-atlas-alpine.
 
