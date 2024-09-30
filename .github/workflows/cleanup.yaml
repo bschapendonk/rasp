@@ -1,4 +1,4 @@
-name: Cleanup Packages
+name: ghcr.io cleanup
 
 on:
   workflow_dispatch:
