@@ -1,5 +1,8 @@
 # rasp
 
+![publish](https://github.com/bschapendonk/rasp/actions/workflows/publish.yaml/badge.svg) ![cleanup](https://github.com/bschapendonk/rasp/actions/workflows/cleanup.yaml/badge.svg)
+
+
 Container "Docker" image for the [RIPE Atlas Software Probe](https://github.com/RIPE-NCC/ripe-atlas-software-probe)
 
 Inspired by https://github.com/CTassisF/ripe-atlas-alpine.
