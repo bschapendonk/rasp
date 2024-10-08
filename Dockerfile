@@ -56,4 +56,4 @@ echo "RIPE Atlas Software Probe: $(cat /rasp/share/ripe-atlas/FIRMWARE_APPS_VERS
 EOF
 
 USER rasp
-CMD ["/rasp/sbin/ripe-atlas"]
+CMD ["sh", "-c", "cat /rasp/version; /rasp/sbin/ripe-atlas"]
