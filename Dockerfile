@@ -1,6 +1,6 @@
 # export BUILDKIT_PROGRESS=plain
 # docker build -t probe . && docker run --rm -it probe
-FROM --platform=$BUILDPLATFORM alpine:3.20 AS builder
+FROM --platform=$BUILDPLATFORM alpine:latest AS builder
 
 RUN <<EOF
 adduser -D -H rasp rasp
@@ -21,8 +21,10 @@ git clone --recursive https://github.com/RIPE-NCC/ripe-atlas-software-probe.git 
 
 cd /tmp/rasp
 
-autoreconf -iv
+# alpine 3.21 with gcc14 needs this to work
+export CFLAGS="-Wno-implicit-function-declaration"
 
+autoreconf -iv
 ./configure \
     --prefix=/rasp \
     --with-user=rasp \
@@ -33,12 +35,12 @@ autoreconf -iv
 mkdir -p /rasp/etc/ripe-atlas
 touch /rasp/etc/ripe-atlas/mode
 
-make install
+make install 
 
 echo "RXTXRPT=yes" > /rasp/etc/ripe-atlas/config.txt
 EOF
 
-FROM --platform=$BUILDPLATFORM alpine:3.20
+FROM --platform=$BUILDPLATFORM alpine:latest
 
 RUN <<EOF
 adduser -D -H rasp rasp
