@@ -21,9 +21,6 @@ git clone --recursive https://github.com/RIPE-NCC/ripe-atlas-software-probe.git 
 
 cd /tmp/rasp
 
-# alpine 3.21 with gcc14 needs this to work
-export CFLAGS="-Wno-implicit-function-declaration"
-
 autoreconf -iv
 ./configure \
     --prefix=/rasp \
