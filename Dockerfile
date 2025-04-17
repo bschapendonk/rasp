@@ -1,5 +1,4 @@
-# export BUILDKIT_PROGRESS=plain
-# docker build -t probe . && docker run --rm -it probe
+# podman build -t probe . && podman run --rm -it probe sh
 FROM --platform=$BUILDPLATFORM alpine:latest AS builder
 
 RUN <<EOF
