@@ -2,6 +2,7 @@
 FROM alpine AS builder
 
 RUN <<EOF
+set -eux
 adduser -D -H rasp rasp
 
 apk add --upgrade --no-cache \
@@ -39,6 +40,7 @@ EOF
 FROM alpine
 
 RUN <<EOF
+set -eux
 adduser -D -H rasp rasp
 
 apk add --upgrade --no-cache \
@@ -49,6 +51,7 @@ EOF
 COPY --from=builder --chown=rasp:rasp /rasp /rasp
 
 RUN <<EOF
+set -eux
 echo "Alpine Linux: $(cat /etc/alpine-release)" > /rasp/version
 echo "RIPE Atlas Software Probe: $(cat /rasp/share/ripe-atlas/FIRMWARE_APPS_VERSION)" >> /rasp/version
 EOF
