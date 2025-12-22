@@ -5,12 +5,18 @@ metadata:
   name: rasp
   labels:
     app: rasp
+  annotations:
+    keel.sh/policy: force
+    keel.sh/match-tag: "true"
+    keel.sh/trigger: poll
+    keel.sh/pollSchedule: "@hourly"
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: rasp
-  strategy: {}
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -18,34 +24,35 @@ spec:
     spec:
       # hostNetwork: true
       securityContext:
-        fsGroup: 1000
+        fsGroup: 999
       enableServiceLinks: false
       initContainers:
         - name: rasp-init
           image: ghcr.io/bschapendonk/rasp:main
+          imagePullPolicy: Always
           resources: {}
           command:
             - sh
             - -c
-            - cp -vL /tmp/key/* /tmp/etc && cp -vL /rasp/etc/ripe-atlas/* /tmp/etc && chmod 600 /tmp/etc/*
+            - set -eux && cp -vL /tmp/key/* /tmp/etc && cp -vL /etc/ripe-atlas/* /tmp/etc && chmod 600 /tmp/etc/*
           volumeMounts:
             - name: data
               mountPath: /tmp/etc
-            - name: probe-key
+            - name: key
               mountPath: /tmp/key
       containers:
         - name: rasp-probe
           image: ghcr.io/bschapendonk/rasp:main
           imagePullPolicy: Always
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
+            runAsUser: 999
+            runAsGroup: 999
           resources: {}
           volumeMounts:
             - name: data
-              mountPath: /rasp/etc/ripe-atlas
+              mountPath: /etc/ripe-atlas
       volumes:
-        - name: probe-key
+        - name: key
           secret:
             secretName: rasp
         - name: data
