@@ -36,5 +36,5 @@ chmod -R 600 /etc/ripe-atlas
 rm -rf /etc/ripe-atlas/probe_key*
 EOF
 
-# USER ripe-atlas
-# CMD ["/usr/sbin/ripe-atlas"]
+USER ripe-atlas
+CMD ["/usr/sbin/ripe-atlas"]
