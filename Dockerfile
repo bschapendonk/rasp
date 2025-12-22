@@ -1,60 +1,40 @@
 # docker build -t probe . && docker run --rm -it probe sh
-FROM alpine AS builder
+FROM debian:trixie-slim
 
 RUN <<EOF
 set -eux
-adduser -D -H rasp rasp
+useradd -m rasp
 
-apk add --upgrade --no-cache \
-    autoconf \
-    automake \
-    g++ \
-    gcc \
-    git \
-    libcap \
-    libtool \
-    linux-headers \
-    make \
-    openssl-dev
+export DEBIAN_FRONTEND="noninteractive"
+apt update
+apt upgrade -y
+apt install -y --no-install-recommends \
+    ca-certificates \
+    curl
 
-git clone --recursive https://github.com/RIPE-NCC/ripe-atlas-software-probe.git /tmp/rasp
+curl -sL -o /etc/apt/trusted.gpg.d/ripe-atlas.asc https://raw.githubusercontent.com/RIPE-NCC/ripe-atlas-software-probe/refs/heads/master/.repo/RPM-GPG-KEY-ripe-atlas-20240924.master
 
-cd /tmp/rasp
+. /etc/os-release
+cat << CAT_EOF > /etc/apt/sources.list.d/ripe-atlas.sources
+Types: deb
+URIs: https://ftp.ripe.net/ripe/atlas/software-probe/debian
+Suites: $VERSION_CODENAME
+Components: main
+Signed-By: /etc/apt/trusted.gpg.d/ripe-atlas.asc
+CAT_EOF
 
-autoreconf -iv
-./configure \
-    --prefix=/rasp \
-    --with-user=rasp \
-    --with-group=rasp \
-    --disable-systemd
+apt update
+apt install -y --no-install-recommends \
+    ripe-atlas-probe
 
-# FIX: make tries to chown this file, but it doesnt exist yet
-mkdir -p /rasp/etc/ripe-atlas
-touch /rasp/etc/ripe-atlas/mode
+apt autopurge -y
+apt distclean -y
 
-make install 
-
-echo "RXTXRPT=yes" > /rasp/etc/ripe-atlas/config.txt
+echo "RXTXRPT=yes" > /etc/ripe-atlas/config.txt
+chown ripe-atlas:ripe-atlas /etc/ripe-atlas/config.txt
+chmod -R 600 /etc/ripe-atlas
+rm -rf /etc/ripe-atlas/probe_key*
 EOF
 
-FROM alpine
-
-RUN <<EOF
-set -eux
-adduser -D -H rasp rasp
-
-apk add --upgrade --no-cache \
-    net-tools \
-    openssh-client
-EOF
-
-COPY --from=builder --chown=rasp:rasp /rasp /rasp
-
-RUN <<EOF
-set -eux
-echo "Alpine Linux: $(cat /etc/alpine-release)" > /rasp/version
-echo "RIPE Atlas Software Probe: $(cat /rasp/share/ripe-atlas/FIRMWARE_APPS_VERSION)" >> /rasp/version
-EOF
-
-USER rasp
-CMD ["sh", "-c", "cat /rasp/version; /rasp/sbin/ripe-atlas"]
+# USER ripe-atlas
+# CMD ["/usr/sbin/ripe-atlas"]
