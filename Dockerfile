@@ -32,7 +32,6 @@ apt distclean -y
 
 echo "RXTXRPT=yes" > /etc/ripe-atlas/config.txt
 chown ripe-atlas:ripe-atlas /etc/ripe-atlas/config.txt
-chmod -R 600 /etc/ripe-atlas
 rm -rf /etc/ripe-atlas/probe_key*
 EOF
 
