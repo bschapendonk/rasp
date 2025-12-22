@@ -1,6 +1,6 @@
 # rasp
 
-![rasp](https://github.com/bschapendonk/rasp/actions/workflows/rasp.yaml/badge.svg) ![cleanup](https://github.com/bschapendonk/rasp/actions/workflows/cleanup.yaml/badge.svg)
+![rasp](https://github.com/bschapendonk/rasp/actions/workflows/rasp.yaml/badge.svg)
 
 
 Container "Docker" image for the [RIPE Atlas Software Probe](https://github.com/RIPE-NCC/ripe-atlas-software-probe)
