@@ -1,5 +1,5 @@
 # docker build -t probe . && docker run --rm -it probe sh
-FROM --platform=$BUILDPLATFORM alpine:latest AS builder
+FROM alpine AS builder
 
 RUN <<EOF
 adduser -D -H rasp rasp
@@ -36,7 +36,7 @@ make install
 echo "RXTXRPT=yes" > /rasp/etc/ripe-atlas/config.txt
 EOF
 
-FROM --platform=$BUILDPLATFORM alpine:latest
+FROM alpine
 
 RUN <<EOF
 adduser -D -H rasp rasp
