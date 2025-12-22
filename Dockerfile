@@ -3,8 +3,6 @@ FROM debian:trixie-slim
 
 RUN <<EOF
 set -eux
-useradd -m rasp
-
 export DEBIAN_FRONTEND="noninteractive"
 apt update
 apt upgrade -y
